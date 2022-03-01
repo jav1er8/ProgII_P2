@@ -14,5 +14,9 @@ typedef enum {
     ERROR=0, OK=1, END=2
 } Status;
 
+typedef enum {
+    MENOR=-1, IGUAL=0, MAYOR=1
+} Comparacion;
+
 #endif	/* TYPES_H */
 
