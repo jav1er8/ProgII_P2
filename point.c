@@ -250,3 +250,95 @@ int point_print (FILE *pf, const void *p) {
     //print info
     return fprintf(pf, "[(%d, %d): %c]", _p->x, _p->y, _p->symbol /*visited*/);
 }
+
+/**
+* @brief Calculate the euclidean distance betweeen two points.
+*
+* The euclidean distance is defined as sqrt ((x1-x2)^2 + (y1-y2)^2)
+* where (x1, y1) and (x2, y2) are the coordinate of both points
+*
+* @code
+* // Example of use
+* const Point *p1, *p2;
+* double d;
+* p1 = point_new (x1, y1, BARRIER);
+* p2 = point_new (x2, y2, SPACE);
+* point_euDistance (p1, p2, &d);
+* printf ("%lf", d);
+* // .... additional code ....
+* @endcode
+*
+* @param p1 pointer to point
+* @param p2 pointer to point
+* @param distance addresss
+*
+* @return Returns OK or ERROR in case of invalid parameters
+*/
+Status point_euDistance (const Point *p1, const Point *p2, double *
+distance) {
+    int x1, y1, x2, y2, x, y;
+
+    if(!p1 || !p2 || !distance) return ERROR;
+
+    x1=point_getCoordinateX(p1);
+    x2=point_getCoordinateX(p2);
+    y1=point_getCoordinateY(p1);
+    y2=point_getCoordinateY(p2);
+
+    if(x1==__INT_MAX__ || x2==__INT_MAX__ || y1==__INT_MAX__ || y2==__INT_MAX__) return ERROR;
+
+    x=x2-x1;
+    y=y2-y1;
+
+    *distance=sqrt(x*x+y*y);
+
+    return OK;
+
+}
+/**
+* @brief Compares two points using their euclidean distances to the
+point (0,0).
+*
+*
+* @param p1,p2 Points to compare.
+*
+* @return It returns an integer less than, equal to, or greater than
+zero if
+* the euclidean distance of p1 to the origin of coordinates is found
+,
+* respectively, to be less than, to match or be greater
+* than the euclidean distance of p2. In case of error, returns
+INT_MIN.
+*/
+int point_cmpEuDistance (const void *p1, const void *p2) {
+    double eud1, eud2, cmpeud;
+    Point *p0=NULL;
+
+    p0=point_new(0, 0, BARRIER);
+
+    if(!p1 || !p2) return INT_MIN;
+
+    if(point_euDistance(p0, p1, &eud1)==ERROR) {
+        point_free(p0);
+        return INT_MIN;
+    }
+
+    if(point_euDistance(p0, p2, &eud2)==ERROR) {
+        point_free(p0);
+        return INT_MIN;
+    }
+
+    point_free(p0);
+
+    /*-1:primero menor que el segundo   0:iguales   1:primero mayor que el segundo*/
+    cmpeud=eud2-eud1;
+    if(cmpeud==0) {
+        return 0;
+    }
+    else if(cmpeud<0) {
+        return 1;
+    }
+    else {
+        return -1;
+    }
+}
