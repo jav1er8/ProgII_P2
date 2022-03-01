@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
 
     n=atoi(argv[1]);
     if(n<=0) return 1;
-    
+
     srand(time(NULL));
 
 
@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
 
         fprintf(stdout,  "Point p[%d]=", i);
         point_print(stdout, p[i]);
-        fprintf(stdout, "distance: %.6lf\n", distance);
+        fprintf(stdout, " distance: %.6lf\n", distance);
     }
 
 
